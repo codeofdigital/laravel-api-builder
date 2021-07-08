@@ -1,0 +1,50 @@
+{
+    "name": "codeofdigital/laravel-api-builder",
+    "description": "Quick and easy way of sending API requests through your Laravel application.",
+    "homepage": "https://github.com/codeofdigital/laravel-api-builder",
+    "keywords": [
+        "codeofdigital",
+        "laravel",
+        "api",
+        "api-builder",
+        "request",
+        "response",
+        "http"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bryan Adam Loh",
+            "email": "bryanadamloh97@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2|^8.0",
+        "illuminate/contracts": "^7.0"
+    },
+    "require-dev": {
+        "illuminate/routing": "^5.1 || ^6.0 || ^7.0 || ^8.0",
+        "phpunit/phpunit": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodeOfDigital\\ApiBuilder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodeOfDigital\\ApiBuilder\\Tests": "tests/"
+        }
+    },
+    "scripts": {
+        "tests": "./vendor/bin/phpunit --colors=always"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodeOfDigital\\ApiBuilder\\ApiBuilderServiceProvider"
+            ]
+        }
+    }
+}
