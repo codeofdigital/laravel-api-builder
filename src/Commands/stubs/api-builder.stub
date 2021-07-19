@@ -1,0 +1,23 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Http\Client\PendingRequest;
+use CodeOfDigital\ApiBuilder\ApiBuilder;
+
+/**
+ * @method static build(...$args);
+ */
+class DummyClass extends ApiBuilder
+{
+    protected $token = '';
+
+    protected $authorizationType = '';
+
+    protected $baseUrl = '';
+
+    protected function buildRequest(PendingRequest $request): void
+    {
+        // TODO: Overwrite your own code here
+    }
+}
