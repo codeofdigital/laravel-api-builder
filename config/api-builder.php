@@ -1,19 +1,36 @@
 <?php
 
 return [
+    /*
+     |---------------------------------------------------------------
+     | API Base Uri
+     |---------------------------------------------------------------
+     |
+     | Define the base URI for the API request call.
+     |
+     */
     'base_uri' => env('API_BUILDER_BASE_URI'),
 
+    /*
+     |---------------------------------------------------------------
+     | API Token
+     |---------------------------------------------------------------
+     |
+     | Define the API token for the base URL that you are going to call.
+     |
+     */
     'token' => env('API_BUILDER_TOKEN'),
 
     /*
      |---------------------------------------------------------------
-     | API User Guards
+     | API User Guards & Morph Prefix
      |---------------------------------------------------------------
      |
-     | Define the authentication guard for the User resolver.
+     | Define the morph prefix and authentication guard for the User resolver.
      |
      */
     'user' => [
+        'morph_prefix' => 'user',
         'guards' => [
             'web', 'api'
         ]
@@ -42,11 +59,19 @@ return [
     'resolver' => [
         'user' => CodeOfDigital\ApiBuilder\Resolvers\UserResolver::class,
         'ip_address' => CodeOfDigital\ApiBuilder\Resolvers\IpAddressResolver::class,
-        'user_agent' => CodeOfDigital\ApiBuilder\Resolvers\UserAgentResolver::class,
-        'method' => CodeOfDigital\ApiBuilder\Resolvers\MethodResolver::class,
-        'domain' => CodeOfDigital\ApiBuilder\Resolvers\DomainResolver::class,
-        'path' => CodeOfDigital\ApiBuilder\Resolvers\PathResolver::class
+        'user_agent' => CodeOfDigital\ApiBuilder\Resolvers\UserAgentResolver::class
     ],
+
+    /*
+     |---------------------------------------------------------------
+     | API Logging
+     |---------------------------------------------------------------
+     |
+     | Determine whether API logging is enabled or disabled
+     | Set to true if you want to log API requests and responses
+     |
+     */
+    'logging' => true,
 
     /*
      |---------------------------------------------------------------

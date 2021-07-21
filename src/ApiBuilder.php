@@ -12,9 +12,16 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 abstract class ApiBuilder
 {
-    use Macroable {
+    use ApiLogger, Macroable {
         Macroable::__call as macroCall;
     }
+
+    /**
+     * Enable or disable API logging
+     *
+     * @var bool
+     */
+    protected static $enableLogging = true;
 
     /**
      * @var PendingRequest
@@ -43,6 +50,13 @@ abstract class ApiBuilder
     protected $baseUrl;
 
     /**
+     * HTTP headers where additional information is needed for resources to be fetched
+     *
+     * @var array
+     */
+    protected $headers = [];
+
+    /**
      * Return the response in JSON format
      *
      * @var bool
@@ -65,12 +79,15 @@ abstract class ApiBuilder
         $this->token = $this->getToken();
         $this->request = $factory->baseUrl($this->baseUrl);
         $this->resolveToken();
-        $this->buildRequest($this->request);
+        $this->buildHeaders($this->request);
     }
 
-    protected function buildRequest(PendingRequest $pendingRequest)
+    protected function buildHeaders(PendingRequest $pendingRequest)
     {
-        $pendingRequest->acceptJson()->asJson();
+        $pendingRequest->withHeaders($this->headers);
+
+        if ($this->token)
+            $this->headers = array_merge($this->headers, ['Authorization' => trim($this->authorizationType.' '.$this->token)]);
     }
 
     public function buildMethodAndPath(string $method, string $path): ApiBuilder
@@ -97,12 +114,17 @@ abstract class ApiBuilder
 
     public function send()
     {
+        $apiLog = null;
+
         $url = Str::of($this->path)->when(!empty($this->query), function (Stringable $path) {
             $path->append('?', http_build_query($this->query));
         });
 
         if (!$this->method)
             throw new BadRequestException('HTTP method is unavailable. Please provide a HTTP method.');
+
+        if ($this->canApiLogging())
+            $apiLog = $this->createLog((object) ['headers' => $this->headers, 'data' => $this->data, 'domain' => $this->baseUrl, 'path' => $this->path, 'method' => $this->method]);
 
         switch ($this->method) {
             case 'GET':
@@ -116,6 +138,9 @@ abstract class ApiBuilder
             default:
                 throw new \OutOfBoundsException('HTTP method is invalid. Please provide a correct HTTP method.');
         }
+
+        if ($this->canApiLogging() && $apiLog)
+            $this->updateLog($apiLog, ['response_header' => $response->headers(), 'response' => $response->object()]);
 
         return $this->asJson ? $response->object() : $response->json();
     }
@@ -163,7 +188,7 @@ abstract class ApiBuilder
         if (isset($this->token))
             $token = $this->token;
         else
-            $token = config('api-builder.token');
+            $token = Config::get('api-builder.token');
 
         if ($token)
             $this->request->withToken($token, $this->authorizationType);

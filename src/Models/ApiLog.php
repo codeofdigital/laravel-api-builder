@@ -14,4 +14,16 @@ class ApiLog extends Model implements \CodeOfDigital\ApiBuilder\Contracts\ApiLog
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'request_header' => 'array',
+        'request' => 'array',
+        'response_header' => 'array',
+        'response' => 'array'
+    ];
 }

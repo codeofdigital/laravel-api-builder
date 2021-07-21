@@ -20,10 +20,10 @@ class CreateApiLogsTable extends Migration
             $table->string('method');
             $table->string('domain');
             $table->string('path');
-            $table->text('request_header');
-            $table->text('request');
-            $table->text('response_header')->nullable();
-            $table->text('response')->nullable();
+            $table->json('request_header');
+            $table->json('request');
+            $table->json('response_header')->nullable();
+            $table->json('response')->nullable();
             $table->ipAddress('ip_address')->nullable();
             $table->string('user_agent', 1023)->nullable();
             $table->timestamps();
