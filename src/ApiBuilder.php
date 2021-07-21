@@ -78,16 +78,15 @@ abstract class ApiBuilder
         $this->baseUrl = $this->getBaseUrl();
         $this->token = $this->getToken();
         $this->request = $factory->baseUrl($this->baseUrl);
-        $this->resolveToken();
         $this->buildHeaders($this->request);
     }
 
     protected function buildHeaders(PendingRequest $pendingRequest)
     {
-        $pendingRequest->withHeaders($this->headers);
-
         if ($this->token)
             $this->headers = array_merge($this->headers, ['Authorization' => trim($this->authorizationType.' '.$this->token)]);
+
+        $pendingRequest->withHeaders($this->headers);
     }
 
     public function buildMethodAndPath(string $method, string $path): ApiBuilder
@@ -181,17 +180,6 @@ abstract class ApiBuilder
             $this->token = $token;
             $this->request->withToken($token, $this->authorizationType);
         });
-    }
-
-    private function resolveToken(): void
-    {
-        if (isset($this->token))
-            $token = $this->token;
-        else
-            $token = Config::get('api-builder.token');
-
-        if ($token)
-            $this->request->withToken($token, $this->authorizationType);
     }
 
     public function getRequest(): PendingRequest
