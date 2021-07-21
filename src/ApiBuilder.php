@@ -89,7 +89,7 @@ abstract class ApiBuilder
         $pendingRequest->withHeaders($this->headers);
     }
 
-    public function buildMethodAndPath(string $method, string $path): ApiBuilder
+    protected function to(string $method, string $path): ApiBuilder
     {
         return tap($this, function () use ($method, $path) {
             $this->method = strtoupper($method);
@@ -193,6 +193,16 @@ abstract class ApiBuilder
             call_user_func_array([$this->request, $method], $parameters);
             return $this;
         }
+
+        throw new \BadMethodCallException(sprintf(
+            'Method %s::%s does not exist.', static::class, $method
+        ));
+    }
+
+    public static function __callStatic($method, $parameters)
+    {
+        if (method_exists(self::build(), $method))
+            return (self::build())->{$method}(...$parameters);
 
         throw new \BadMethodCallException(sprintf(
             'Method %s::%s does not exist.', static::class, $method

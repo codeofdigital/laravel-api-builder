@@ -6,7 +6,9 @@ use Illuminate\Http\Client\PendingRequest;
 use CodeOfDigital\ApiBuilder\ApiBuilder;
 
 /**
- * @method static build(...$args);
+ * @method static self to(string $method, string $path)
+ *
+ * @see ApiBuilder
  */
 class DummyClass extends ApiBuilder
 {
