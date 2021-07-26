@@ -122,7 +122,7 @@ abstract class ApiBuilder
         if (!$this->method)
             throw new BadRequestException('HTTP method is unavailable. Please provide a HTTP method.');
 
-        if ($this->canApiLogging())
+        if (static::canApiLogging())
             $apiLog = $this->createLog((object) ['headers' => $this->headers, 'data' => $this->data, 'domain' => $this->baseUrl, 'path' => $this->path, 'method' => $this->method]);
 
         switch ($this->method) {
@@ -138,7 +138,7 @@ abstract class ApiBuilder
                 throw new \OutOfBoundsException('HTTP method is invalid. Please provide a correct HTTP method.');
         }
 
-        if ($this->canApiLogging() && $apiLog)
+        if (static::canApiLogging() && $apiLog)
             $this->updateLog($apiLog, ['response_header' => $response->headers(), 'response' => $response->object()]);
 
         return $this->asJson ? $response->object() : $response->json();

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
 
 trait ApiLogger
 {
-    private function canApiLogging(): bool
+    public static function canApiLogging(): bool
     {
         $loggingEnabled = Config::get('api-builder.logging', true);
 
