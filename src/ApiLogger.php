@@ -26,7 +26,7 @@ trait ApiLogger
         return call_user_func([$modelClass, 'create'], $this->toCreateLogging($data));
     }
 
-    private function updateLog(\CodeOfDigital\ApiBuilder\Models\ApiLog $apiLog, array $data)
+    private function updateLog($apiLog, array $data)
     {
         return call_user_func([$apiLog, 'update'], $data);
     }
