@@ -115,8 +115,8 @@ abstract class ApiBuilder
     {
         $apiLog = null;
 
-        $url = Str::of($this->path)->when(!empty($this->query), function (Stringable $path) {
-            $path->append('?', http_build_query($this->query));
+        $url = (string) Str::of($this->path)->when(!empty($this->query), function (Stringable $path) {
+            return $path->append('?', http_build_query($this->query));
         });
 
         if (!$this->method)
