@@ -61,7 +61,7 @@ abstract class ApiBuilder
      *
      * @var bool
      */
-    protected $asJson = true;
+    protected $asObject = true;
 
     private $method;
     private $path;
@@ -128,7 +128,7 @@ abstract class ApiBuilder
         switch ($this->method) {
             case 'GET':
             case 'HEAD':
-                $response = $this->request->send($this->method, $this->path, $this->query); break;
+                $response = $this->request->send($this->method, $url); break;
             case 'POST':
             case 'PUT':
             case 'PATCH':
@@ -141,7 +141,7 @@ abstract class ApiBuilder
         if (static::canApiLogging() && $apiLog)
             $this->updateLog($apiLog, ['response_header' => $response->headers(), 'response' => $response->object()]);
 
-        return $this->asJson ? $response->object() : $response->json();
+        return $this->asObject ? $response->object() : $response->json();
     }
 
     public function getBaseUrl()
