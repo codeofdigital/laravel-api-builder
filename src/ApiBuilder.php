@@ -2,6 +2,7 @@
 
 namespace CodeOfDigital\ApiBuilder;
 
+use CodeOfDigital\ApiBuilder\Resource\ObjectResource;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Config;
@@ -138,10 +139,15 @@ abstract class ApiBuilder
                 throw new \OutOfBoundsException('HTTP method is invalid. Please provide a correct HTTP method.');
         }
 
-        if (static::canApiLogging() && $apiLog)
-            $this->updateLog($apiLog, ['response_header' => $response->headers(), 'response' => $response->object()]);
+        $data = (object) [
+            'status' => $response->status(),
+            'response' => $this->asObject ? $response->object() : $response->json()
+        ];
 
-        return $this->asObject ? $response->object() : $response->json();
+        if (static::canApiLogging() && $apiLog)
+            $this->updateLog($apiLog, ['response_header' => $response->headers(), 'response' => $data]);
+
+        return $data;
     }
 
     public function getBaseUrl()
