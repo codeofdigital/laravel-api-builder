@@ -2,7 +2,6 @@
 
 namespace CodeOfDigital\ApiBuilder;
 
-use CodeOfDigital\ApiBuilder\Resource\ObjectResource;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Config;
@@ -62,7 +61,7 @@ abstract class ApiBuilder
      *
      * @var bool
      */
-    protected $asObject = true;
+    public static $asObject = true;
 
     private $method;
     private $path;
@@ -87,7 +86,8 @@ abstract class ApiBuilder
         if ($this->token)
             $this->headers = array_merge($this->headers, ['Authorization' => trim($this->authorizationType.' '.$this->token)]);
 
-        $pendingRequest->withHeaders($this->headers);
+        if (!empty($this->headers))
+            $pendingRequest->withHeaders($this->headers);
     }
 
     protected function to(string $method, string $path): ApiBuilder
@@ -141,7 +141,7 @@ abstract class ApiBuilder
 
         $data = (object) [
             'status' => $response->status(),
-            'response' => $this->asObject ? $response->object() : $response->json()
+            'response' => static::$asObject ? $response->object() : $response->json()
         ];
 
         if (static::canApiLogging() && $apiLog)
