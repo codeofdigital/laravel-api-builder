@@ -140,6 +140,7 @@ abstract class ApiBuilder
         }
 
         $data = (object) [
+            'success' => $response->successful(),
             'status' => $response->status(),
             'response' => static::$asObject ? $response->object() : $response->json()
         ];
