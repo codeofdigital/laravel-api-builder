@@ -181,7 +181,7 @@ abstract class ApiBuilder
         return null;
     }
 
-    public function setToken($token)
+    public function setToken($token): ApiBuilder
     {
         return tap($this, function () use ($token) {
             $this->token = $token;
