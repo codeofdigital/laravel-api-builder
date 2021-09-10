@@ -142,7 +142,7 @@ abstract class ApiBuilder
         $data = (object) [
             'success' => $response->successful(),
             'status' => $response->status(),
-            'response' => static::$asObject ? $response->object() : $response->json()
+            'response' => isJson($response->body()) ? (static::$asObject ? $response->object() : $response->json()) : $response->body()
         ];
 
         if (static::canApiLogging() && $apiLog)
